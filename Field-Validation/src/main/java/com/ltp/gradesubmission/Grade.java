@@ -2,9 +2,16 @@ package com.ltp.gradesubmission;
 
 import java.util.UUID;
 
+import javax.validation.constraints.NotBlank;
+
 public class Grade {
+    
+    @NotBlank(message = "Name is mandatory")
     private String name;
+
+    @NotBlank(message = "Subject is mandatory")
     private String subject;
+
     private String score;
     private String id;
 
