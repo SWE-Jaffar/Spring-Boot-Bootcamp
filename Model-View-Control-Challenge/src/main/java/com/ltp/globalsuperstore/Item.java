@@ -1,6 +1,6 @@
 package com.ltp.globalsuperstore;
 import java.util.Date;
-
+import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 
 // POJO class for an item
@@ -12,9 +12,21 @@ public class Item {
     private Double discount;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
+    private String id;
 
     public Item() {
+        this.id = UUID.randomUUID().toString();
     }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    
 
 
     public String getCategory() {
