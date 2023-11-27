@@ -5,14 +5,17 @@ import java.util.UUID;
 import javax.validation.constraints.NotBlank;
 
 public class Grade {
-    
+
     @NotBlank(message = "Name is mandatory")
     private String name;
 
     @NotBlank(message = "Subject is mandatory")
     private String subject;
 
+    @Score(message = "Score must be A, B, C, D, or F")
     private String score;
+
+
     private String id;
 
 
