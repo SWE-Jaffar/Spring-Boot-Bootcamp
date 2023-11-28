@@ -3,13 +3,23 @@ package com.ltp.globalsuperstore;
 import java.util.Date;
 import java.util.UUID;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class Item {
+    @NotBlank(message = "Category is mandatory")
     private String category;
+    @NotBlank(message = "Name is mandatory")
     private String name;
+    @Price
+    @Min(value = 1, message = "Price must be greater than 0")
     private Double price;
+    @Min(value = 1, message = "Discount must be greater than 0")
     private Double discount;
+    @Past(message = "Date must be in the past")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
     private String id;
