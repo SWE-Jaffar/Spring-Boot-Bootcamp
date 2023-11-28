@@ -1,12 +1,7 @@
-package com.ltp.globalsuperstore;
-
-import java.util.ArrayList;
+package com.ltp.globalsuperstore.controller;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 import javax.validation.Valid;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,15 +10,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.ltp.globalsuperstore.Constants;
+import com.ltp.globalsuperstore.Item;
+import com.ltp.globalsuperstore.repositery.StoreRepo;
+
 @Controller
 public class StoreController {
 
-    List<Item> items = new ArrayList<>();
+    StoreRepo storeRepo = new StoreRepo();
 
     @GetMapping("/")
     public String getForm(Model model, @RequestParam(required = false) String id) {
-        int index = getIndexFromId(id);
-        model.addAttribute("item", index == Constants.NOT_FOUND ? new Item() : items.get(index));
+        int index = storeRepo.getIndexFromId(id);
+        model.addAttribute("item", index == Constants.NOT_FOUND ? new Item() : storeRepo.getItemIndex(index));
         return "form";
     }
 
@@ -36,9 +35,9 @@ public class StoreController {
         int index = getIndexFromId(item.getId());
         String status = Constants.SUCCESS_STATUS;
         if (index == Constants.NOT_FOUND) {
-            items.add(item);
-        } else if (within5Days(item.getDate(), items.get(index).getDate())) {
-            items.set(index, item);
+            storeRepo.addItem(item);
+        } else if (within5Days(item.getDate(), storeRepo.getItemIndex(index).getDate())) {
+            storeRepo.setItem(index, item);
         } else {
             status = Constants.FAILED_STATUS;
         }
@@ -48,13 +47,13 @@ public class StoreController {
 
     @GetMapping("/inventory")
     public String getInventory(Model model) {
-        model.addAttribute("items", items);
+        model.addAttribute("items", storeRepo.getItems());
         return "inventory";
     }
 
     public int getIndexFromId(String id) {
-        for (int i = 0; i < items.size(); i++) {
-            if (items.get(i).getId().equals(id)) return i;
+        for (int i = 0; i < storeRepo.getItems().size(); i++) {
+            if (storeRepo.getItemIndex(i).getId().equals(id)) return i;
         }
         return Constants.NOT_FOUND;
     }
