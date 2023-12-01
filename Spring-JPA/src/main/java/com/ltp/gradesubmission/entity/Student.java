@@ -2,10 +2,23 @@ package com.ltp.gradesubmission.entity;
 
 import java.time.LocalDate;
 
-public class Student {
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "student")
+public class Student {
+    
+    @Id
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "name", nullable = false)
     private String name;
+    
+    @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
     public Long getId() {
