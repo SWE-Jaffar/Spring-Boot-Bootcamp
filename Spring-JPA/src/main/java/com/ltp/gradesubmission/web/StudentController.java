@@ -42,7 +42,7 @@ public class StudentController {
 
     @GetMapping("/all")
     public ResponseEntity<List<Student>> getStudents() {
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(studentService.getStudents(),HttpStatus.OK);
     }
 
 
