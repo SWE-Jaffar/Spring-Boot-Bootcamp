@@ -6,6 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+
+import com.ltp.gradesubmission.security.filter.AuthenticationFilter;
+import com.ltp.gradesubmission.security.manager.CustomAuthenticationManager;
+
 import lombok.AllArgsConstructor;
 
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -15,8 +19,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @AllArgsConstructor
 public class SecurityConfig {
 
+    CustomAuthenticationManager authenticationManager;
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        AuthenticationFilter filter = new AuthenticationFilter(authenticationManager);
+        filter.setFilterProcessesUrl("/authenticate");
+        
         http        
             .headers().frameOptions().disable() // New Line: the h2 console runs on a "frame". By default, Spring Security prevents rendering within an iframe. This line disables its prevention.
             .and()
@@ -26,6 +36,7 @@ public class SecurityConfig {
             .antMatchers(HttpMethod.POST,SecurityConstants.REGISTER_PATH).permitAll() // New Line: allows us to access the register endpoint without the need to authenticate.
             .anyRequest().authenticated()
             .and()
+            .addFilter(filter)
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
     }
